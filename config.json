@@ -1,0 +1,40 @@
+[
+  {
+    "source": {
+      "type": "console"
+    },
+    "operations": [
+      {
+        "type": "remove_keys",
+        "keys": ["key1"]
+      },
+      {
+        "type": "flatten"
+      }
+    ],
+    "destination": {
+      "type": "console"
+    }
+  },
+  {
+    "source": {
+      "type": "kafka",
+      "url": "...",
+      "topic": "topic"
+    },
+    "operations": [
+      {
+        "type": "flatten"
+      },
+      {
+        "type": "remove_keys",
+        "keys": ["key1", "key2"]
+      }
+    ],
+    "destination": {
+      "type": "kafka",
+      "url": "...",
+      "topic": "topic"
+    }
+  }
+]
