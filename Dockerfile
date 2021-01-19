@@ -23,4 +23,4 @@ COPY . /usr/src/app
 # See https://docs.docker.com/develop/develop-images/multistage-build/
 FROM test AS production
 
-CMD ["ruby" "main.rb"]
+CMD ["ruby", "main.rb"]

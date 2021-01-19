@@ -1,11 +1,13 @@
 # frozen_string_literal: true
+
+require 'bundler/setup'
+require 'oj'
+
 require_relative 'configuration'
 require_relative 'worker'
 
-require 'oj'
-
 # Read and verify configuration
-config = Oj.load(File.read(ENV['CONFIG_FILE_PATH']))
+config = Oj.load(File.read(ENV.fetch('CONFIG_FILE_PATH', './config.json')))
 configuration = Configuration.new(source: config.first)
 
 # Spawn worker

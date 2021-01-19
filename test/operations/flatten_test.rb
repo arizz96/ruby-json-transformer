@@ -1,6 +1,6 @@
-require_relative '../../operations'
-
 require 'minitest/autorun'
+
+require_relative '../../operations'
 
 class Operations::FlattenTest < Minitest::Test
   def test_1

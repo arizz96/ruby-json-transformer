@@ -1,8 +1,8 @@
+require 'hanami/utils/string'
+
 require_relative 'sources'
 require_relative 'operations'
 require_relative 'destinations'
-
-require 'hanami/utils/string'
 
 class Worker
   def initialize(config)
