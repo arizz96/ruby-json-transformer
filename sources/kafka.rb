@@ -9,7 +9,6 @@ class Sources::Kafka
 
   def each_message
     @consumer.each_message do |message|
-      puts message.topic, message.partition, message.offset, message.key, message.value
       yield Oj.load(message.value)
     end
   end

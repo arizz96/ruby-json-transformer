@@ -1,4 +1,5 @@
 require 'hanami/utils/string'
+require 'json'
 
 require_relative 'sources'
 require_relative 'operations'
@@ -16,10 +17,18 @@ class Worker
 
   def process
     @source.each_message do |message|
+      puts "[#{@source.class}] - reading message:"
+      puts JSON.pretty_generate(message)
+
       res = message
       @operations.each do |operation|
+        puts "[#{operation.class}] - transforming message"
         res = operation.operate(res)
       end
+
+      puts "[#{@source.class}] - writing message:"
+      puts JSON.pretty_generate(res)
+      puts
       @destination.write_message(res)
     end
   end
