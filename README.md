@@ -27,6 +27,7 @@ These operations are currently supported:
 - `to_key_value_array`: each object data will be splitted to key and value arrays (`{ foo: { a: 1, b: 2 } }` -> `{ foo.key: ["a", "b"], foo.value: [1, 2] }`)
 - `remove_keys`: remove specific keys from given object (`include_keys=['foo->b']`, `{ foo: { a: 1, b: 2 } }` -> `{ foo: { a: 1 } }`)
 - `keep_keys`: keep only specific keys from given object (`include_keys=['foo', 'foo->b']`, `{ foo: { a: 1, b: 2 } }` -> `{ foo: { b: 2 } }`)
+- `change_value_type`: change type of value to a new one (`include_keys=['foo', 'foo->b'], to_type='string'`, `{ foo: { a: 1, b: 2 } }` -> `{ foo: { a: "1", b: "2" } }`)
 
 ### Configuration
 The `Configuration` class is responsible of parsing a JSON string containing the desidered spec for the application. Multiple configuration can be provided and the application will check for a JSON file describing those configurations; this file should be structured as follow:
