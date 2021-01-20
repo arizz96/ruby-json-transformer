@@ -6,10 +6,11 @@
     "operations": [
       {
         "type": "remove_keys",
-        "keys": ["key1"]
+        "include_keys": ["key1"]
       },
       {
-        "type": "flatten"
+        "type": "flatten",
+        "exclude_keys": ["key3"]
       }
     ],
     "destination": {
@@ -28,7 +29,7 @@
       },
       {
         "type": "remove_keys",
-        "keys": ["key1", "key2"]
+        "include_keys": ["key1", "key2"]
       }
     ],
     "destination": {
