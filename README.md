@@ -53,5 +53,5 @@ The `Configuration` class is responsible of parsing a JSON string containing the
 ]
 ```
 
-### Multiple workers
-Coming soon!
+### Multiple configurations
+If the JSON configuration file contains multiple specs, a `Worker` will be spawned for each of them.
