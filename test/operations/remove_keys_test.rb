@@ -4,7 +4,7 @@ require_relative '../../operations'
 
 class Operations::RemoveKeysTest < Minitest::Test
   def test_1
-    operation = Operations::RemoveKeys.new(include_keys: ['node0.0.node1.0', 'node0.0.node1.1.node2.0'])
+    operation = Operations::RemoveKeys.new(include_keys: ['node0.0->node1.0', 'node0.0->node1.1->node2.0'])
 
     input = {
       "node0.0" => {

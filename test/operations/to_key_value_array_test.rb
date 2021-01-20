@@ -61,7 +61,7 @@ class Operations::ToKeyValueArrayTest < Minitest::Test
   end
 
   def test_with_exclude_keys
-    operation = Operations::ToKeyValueArray.new(exclude_keys: ['node0.0.node1.1'])
+    operation = Operations::ToKeyValueArray.new(exclude_keys: ['node0.0->node1.1'])
 
     input = {
       "node0.0" => {
