@@ -3,7 +3,7 @@ require 'kafka'
 class Sources::Kafka
   def initialize(url:, topic:)
     @kafka = ::Kafka.new(url)
-    @consumer = @kafka.consumer(group_id: "ruby-json-transformer-#{topic}-consumer-#{Time.now.to_i}")
+    @consumer = @kafka.consumer(group_id: "ruby-json-transformer-#{topic}-consumer")
     @consumer.subscribe(topic)
   end
 
