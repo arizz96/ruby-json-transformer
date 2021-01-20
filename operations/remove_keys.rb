@@ -15,8 +15,10 @@ class Operations::RemoveKeys < Operations::Base
       # keep track of nested object names
       key_path = object_key_path ? "#{object_key_path}#{@key_path_separator}#{k}" : k
 
-      if v.is_a?(Enumerable)
-        # recursive call to key-valueize child elements
+      # recursive call to key-valueize child elements
+      if v.is_a?(Array)
+        v = v.map { |e| e.is_a?(Hash) ? _json_remove_keys(e, key_path: key_path) : e }
+      elsif v.is_a?(Hash)
         v = _json_remove_keys(v, key_path: key_path)
       end
 
