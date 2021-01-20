@@ -1,5 +1,5 @@
 FROM ruby:3-alpine AS development
-RUN apk update && apk add make g++
+RUN apk add --no-cache make g++
 
 WORKDIR /tmp
 COPY Gemfile /tmp/Gemfile
@@ -12,6 +12,8 @@ RUN gem install bundler -v ${BUNDLER_VERSION} && \
     bundle config set deployment 'true' && \
     bundle config set path ${GEM_HOME} && \
     bundle install -j 8
+
+RUN apk del make g++
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
