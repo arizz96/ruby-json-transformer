@@ -1,41 +1,30 @@
-class Operations::KeepKeys
-  def initialize(keys: [])
-    @keys = keys
-  end
+require_relative 'base'
 
+class Operations::KeepKeys < Operations::Base
   def operate(obj)
     _json_keep_keys(obj)
   end
 
   private
 
-  def _json_keep_keys(json, parent_prefix: nil, separator: '.')
+  def _json_keep_keys(json, key_path: nil)
     res = {}
+    object_key_path = key_path
 
     json.each do |k, v|
-      key = parent_prefix ? "#{parent_prefix}#{separator}#{k}" : k # keep track of nested object names
+      # keep track of nested object names
+      key_path = object_key_path ? "#{object_key_path}#{@key_path_separator}#{k}" : k
 
       if v.is_a?(Enumerable)
         # recursive call to key-valueize child elements
-        v = _json_keep_keys(v, parent_prefix: key, separator: separator)
+        v = _json_keep_keys(v, key_path: key_path)
       end
 
-      if _should_operate_key?(key)
+      if _should_operate_key?(key_path)
         res[k] = v
       end
     end
 
     res
-  end
-
-  def _should_operate_key?(given_key)
-    if !defined?(@_keys)
-      @_keys ||= {}
-      @keys.each do |_key|
-        @_keys[_key.to_s] = true
-      end
-    end
-
-    @keys.empty? || @_keys.key?(given_key.to_s)
   end
 end

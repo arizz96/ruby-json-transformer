@@ -25,6 +25,60 @@ class Operations::FlattenTest < Minitest::Test
       "node0.0_node1.2" => "example3"
     }
 
-    assert_equal operation.operate(input), output
+    assert_equal output, operation.operate(input)
+  end
+
+  def test_with_keys1
+    operation = Operations::Flatten.new(keys: ['node0.0'])
+
+    input = {
+      "node0.0" => {
+        "node1.0" => "example1",
+        "node1.1" => {
+          "node2.0" => "example2",
+          "node2.1" => 1,
+          "node2.2" => true
+        },
+        "node1.2" => "example3"
+      }
+    }
+    output = {
+      "node0.0_node1.0" => "example1",
+      "node0.0_node1.1" => {
+        "node2.0" => "example2",
+        "node2.1" => 1,
+        "node2.2" => true
+      },
+      "node0.0_node1.2" => "example3"
+    }
+
+    assert_equal output, operation.operate(input)
+  end
+
+  def test_with_keys2
+    operation = Operations::Flatten.new(keys: ['node0.0.node1.1'])
+
+    input = {
+      "node0.0" => {
+        "node1.0" => "example1",
+        "node1.1" => {
+          "node2.0" => "example2",
+          "node2.1" => 1,
+          "node2.2" => true
+        },
+        "node1.2" => "example3"
+      }
+    }
+    output = {
+      "node0.0" => {
+        "node1.0" => "example1",
+        "node1.1_node2.0" => "example2",
+        "node1.1_node2.1" => 1,
+        "node1.1_node2.2" => true,
+        "node1.2" => "example3"
+      }
+    }
+
+    assert_equal output, operation.operate(input)
   end
 end
