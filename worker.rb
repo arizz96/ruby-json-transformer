@@ -17,13 +17,14 @@ class Worker
 
   def process
     @source.each_message do |message|
-      puts "[#{@source.class}] - reading message:"
+      puts "[#{@source.class}] - read message:"
       puts JSON.pretty_generate(message)
 
       res = message
       @operations.each do |operation|
-        puts "[#{operation.class}] - transforming message"
+        puts "[#{operation.class}] - transformed message:"
         res = operation.operate(res)
+        puts JSON.pretty_generate(res)
       end
 
       puts "[#{@source.class}] - writing message:"
