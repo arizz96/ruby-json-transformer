@@ -1,3 +1,5 @@
+require 'oj'
+
 require_relative 'base'
 
 class Operations::ChangeValueType < Operations::Base
@@ -50,6 +52,8 @@ class Operations::ChangeValueType < Operations::Base
     case @to_type
     when 'string'
       value.to_s
+    when 'json_string'
+      value.is_a?(Hash) ? Oj.dump(value) : value.to_s
     when 'integer'
       value.to_i
     when 'float'
