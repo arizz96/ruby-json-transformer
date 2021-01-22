@@ -22,21 +22,9 @@ class Operations::Base
     end
 
     if @include_keys.any? || @exclude_keys.any?
-      splitted_key_path = given_key.split(@key_path_separator)
-      checks = splitted_key_path.map.with_index do |given_key_parent, i|
-        # build key ancestors path
-        given_key_parent = [
-          *(splitted_key_path[0...i]),
-          given_key_parent
-        ].compact.join(@key_path_separator)
+      given_key_parent = given_key.split(@key_path_separator)[0..-2].join(@key_path_separator)
 
-        # when checking ancestors, check for a ->* specified key
-        key_to_check = if given_key_parent == given_key
-          given_key.to_s
-        else
-          "#{given_key_parent}#{@key_path_separator}*"
-        end
-
+      checks = [given_key.to_s, "#{given_key_parent}#{@key_path_separator}*"].map do |key_to_check|
         if @include_keys.any?
           @_keys.key?(key_to_check)
         else
