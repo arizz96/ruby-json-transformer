@@ -230,7 +230,51 @@ class Operations::ChangeValueTypeTest < Minitest::Test
           "node2.1" => [
             "1",
             '{"node3.0":"example4","node3.1":[{"node4.0":"example5"}]}',
-            '[1, 2, 3]'
+            '[1,2,3]'
+          ],
+          "node2.2" => true
+        },
+        "node1.2" => "example3"
+      }
+    }
+
+    assert_equal output, operation.operate(input)
+  end
+
+  def test_with_include_keys7
+    operation = Operations::ChangeValueType.new(include_keys: ['node0.0->node1.1->node2.1->**'], to_type: 'json_string')
+
+    input = {
+      "node0.0" => {
+        "node1.0" => "example1",
+        "node1.1" => {
+          "node2.0" => "example2",
+          "node2.1" => [
+            "1",
+            {
+              "node3.0" => "example4",
+              "node3.1" => [
+                {
+                  "node4.0" => "example5"
+                }
+              ]
+            },
+            [1, 2, 3]
+          ],
+          "node2.2" => true
+        },
+        "node1.2" => "example3"
+      }
+    }
+    output = {
+      "node0.0" => {
+        "node1.0" => "example1",
+        "node1.1" => {
+          "node2.0" => "example2",
+          "node2.1" => [
+            "1",
+            '{"node3.0":"example4","node3.1":[{"node4.0":"example5"}]}',
+            '[1,2,3]'
           ],
           "node2.2" => true
         },

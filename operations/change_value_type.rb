@@ -32,7 +32,7 @@ class Operations::ChangeValueType < Operations::Base
       # keep track of nested object names
       key_path = object_key_path ? "#{object_key_path}#{@key_path_separator}#{k}" : k
 
-      if v.is_a?(Enumerable)
+      if v.is_a?(Enumerable) && !_should_operate_key_and_child?(key_path)
         v = _json_change_value_type(v, key_path: key_path)
       end
 
@@ -57,7 +57,7 @@ class Operations::ChangeValueType < Operations::Base
     when 'string'
       value.to_s
     when 'json_string'
-      value.is_a?(Hash) ? Oj.dump(value) : value.to_s
+      (value.is_a?(Hash) || value.is_a?(Array)) ? Oj.dump(value) : value.to_s
     when 'integer'
       value.to_i
     when 'float'
