@@ -22,8 +22,12 @@ class Operations::ChangeValueType < Operations::Base
     end
     object_key_path = key_path
 
-    json.each do |k, v|
-      v = k if json.is_a?(Array)
+    json.each.with_index do |elem, i|
+      if json.is_a?(Array)
+        k, v = i.to_s, elem
+      else
+        k, v = elem
+      end
 
       # keep track of nested object names
       key_path = object_key_path ? "#{object_key_path}#{@key_path_separator}#{k}" : k

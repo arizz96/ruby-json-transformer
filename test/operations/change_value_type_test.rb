@@ -215,7 +215,7 @@ class Operations::ChangeValueTypeTest < Minitest::Test
                 }
               ]
             },
-            3
+            [1, 2, 3]
           ],
           "node2.2" => true
         },
@@ -230,7 +230,7 @@ class Operations::ChangeValueTypeTest < Minitest::Test
           "node2.1" => [
             "1",
             '{"node3.0":"example4","node3.1":[{"node4.0":"example5"}]}',
-            "3"
+            '[1, 2, 3]'
           ],
           "node2.2" => true
         },
