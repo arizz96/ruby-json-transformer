@@ -17,7 +17,7 @@ class Operations::Base
       splitted_key_path = given_key.split(@key_path_separator)
       given_key_parent = splitted_key_path[0..-2].join(@key_path_separator)
 
-      checks = splitted_key_path.map.with_index do |given_key_anchestor, i|
+      checks = splitted_key_path.flat_map.with_index do |given_key_anchestor, i|
         # build key ancestors path
         given_key_anchestor = [
           *(splitted_key_path[0...i]),
@@ -25,18 +25,23 @@ class Operations::Base
         ].compact.join(@key_path_separator)
 
         # when checking ancestors, check for a ->* specified key
-        key_to_check = if given_key_anchestor == given_key
-          given_key.to_s
+        keys_to_check = if given_key_anchestor == given_key
+          [given_key.to_s]
         elsif given_key_anchestor == given_key_parent
-          "#{given_key_parent}#{@key_path_separator}*"
+          [
+            "#{given_key_parent}#{@key_path_separator}*",
+            "#{given_key_parent}#{@key_path_separator}**"
+          ]
         else
-          "#{given_key_anchestor}#{@key_path_separator}**"
+          ["#{given_key_anchestor}#{@key_path_separator}**"]
         end
 
-        if @include_keys.any?
-          @_keys.key?(key_to_check)
-        else
-          @_keys[key_to_check] != false
+        keys_to_check.map do |key_to_check|
+          if @include_keys.any?
+            @_keys.key?(key_to_check)
+          else
+            @_keys[key_to_check] != false
+          end
         end
       end
 
