@@ -11,20 +11,28 @@ class Operations::Base
   protected
 
   def _should_operate_key?(given_key)
-    if !defined?(@_keys)
-      @_keys ||= {}
-      @include_keys.each do |included_key|
-        @_keys[included_key.to_s] = true
-      end
-      @exclude_keys.each do |excluded_key|
-        @_keys[excluded_key.to_s] = false
-      end
-    end
+    _load_keys
 
     if @include_keys.any? || @exclude_keys.any?
-      given_key_parent = given_key.split(@key_path_separator)[0..-2].join(@key_path_separator)
+      splitted_key_path = given_key.split(@key_path_separator)
+      given_key_parent = splitted_key_path[0..-2].join(@key_path_separator)
 
-      checks = [given_key.to_s, "#{given_key_parent}#{@key_path_separator}*"].map do |key_to_check|
+      checks = splitted_key_path.map.with_index do |given_key_anchestor, i|
+        # build key ancestors path
+        given_key_anchestor = [
+          *(splitted_key_path[0...i]),
+          given_key_anchestor
+        ].compact.join(@key_path_separator)
+
+        # when checking ancestors, check for a ->* specified key
+        key_to_check = if given_key_anchestor == given_key
+          given_key.to_s
+        elsif given_key_anchestor == given_key_parent
+          "#{given_key_parent}#{@key_path_separator}*"
+        else
+          "#{given_key_anchestor}#{@key_path_separator}**"
+        end
+
         if @include_keys.any?
           @_keys.key?(key_to_check)
         else
@@ -39,6 +47,29 @@ class Operations::Base
       end
     else
       true
+    end
+  end
+
+  def _should_operate_key_and_child?(given_key)
+    _load_keys
+
+    _should_operate_key?(given_key) && (
+      _should_operate_key?("#{given_key}#{@key_path_separator}*") ||
+      _should_operate_key?("#{given_key}#{@key_path_separator}**")
+    )
+  end
+
+  private
+
+  def _load_keys
+    if !defined?(@_keys)
+      @_keys ||= {}
+      @include_keys.each do |included_key|
+        @_keys[included_key.to_s] = true
+      end
+      @exclude_keys.each do |excluded_key|
+        @_keys[excluded_key.to_s] = false
+      end
     end
   end
 end
