@@ -32,7 +32,7 @@ class Operations::ChangeValueType < Operations::Base
       # keep track of nested object names
       key_path = object_key_path ? "#{object_key_path}#{@key_path_separator}#{k}" : k
 
-      if v.is_a?(Enumerable) && !_should_operate_key_and_child?(key_path)
+      if v.is_a?(Enumerable) && !(_should_operate_key_and_child?(key_path) && @to_type == 'json_string')
         v = _json_change_value_type(v, key_path: key_path)
       end
 
