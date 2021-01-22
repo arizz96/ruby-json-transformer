@@ -6,8 +6,8 @@ require_relative 'operations'
 require_relative 'destinations'
 
 class Worker
-  def initialize(config)
-    @config = config
+  def initialize(configuration)
+    @configuration = configuration
     @source = nil
     @operations = []
     @destination = nil
@@ -16,20 +16,20 @@ class Worker
   end
 
   def process
+    puts "Started worker processing with config:"
+    puts JSON.pretty_generate(@configuration.config)
+    puts
+
     @source.each_message do |message|
-      puts "[#{@source.class}] - read message:"
-      puts JSON.pretty_generate(message)
+      _log(@source, message)
 
       res = message
       @operations.each do |operation|
-        puts "[#{operation.class}] - transformed message:"
         res = operation.operate(res)
-        puts JSON.pretty_generate(res)
+        _log(operation, res)
       end
 
-      puts "[#{@source.class}] - writing message:"
-      puts JSON.pretty_generate(res)
-      puts
+      _log(@destination, res)
       @destination.write_message(res)
     end
   end
@@ -40,12 +40,22 @@ class Worker
     Object.const_get(Hanami::Utils::String.new(string).classify)
   end
 
-  def _load_components
-    @source = _class_from_string("sources::#{@config.source_type}").new(**@config.source_data)
-    @destination = _class_from_string("destinations::#{@config.destination_type}").new(**@config.destination_data)
+  def _class_module_name(object)
+    object.class.to_s.split('::')[-2]
+  end
 
-    @operations = @config.operations.map do |operation|
+  def _load_components
+    @source = _class_from_string("sources::#{@configuration.source_type}").new(**@configuration.source_data)
+    @destination = _class_from_string("destinations::#{@configuration.destination_type}").new(**@configuration.destination_data)
+
+    @operations = @configuration.operations.map do |operation|
       _class_from_string("operations::#{operation.type}").new(**operation.data)
     end
+  end
+
+  def _log(step, message)
+    puts "[#{step.class}] - handled message:" if %w(low med).include?(step.log_level)
+    puts JSON.pretty_generate(message) if %w(med).include?(step.log_level)
+    puts if %w(low med).include?(step.log_level) && _class_module_name(step) == 'Destinations'
   end
 end

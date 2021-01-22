@@ -1,5 +1,8 @@
 class Operations::Base
-  def initialize(include_keys: [], exclude_keys: [], key_path_separator: '->')
+  attr_reader :log_level
+
+  def initialize(log_level: 'low', include_keys: [], exclude_keys: [], key_path_separator: '->')
+    @log_level = log_level
     @include_keys = include_keys
     @exclude_keys = exclude_keys
     @key_path_separator = key_path_separator

@@ -30,12 +30,15 @@ These operations are currently supported:
 - `change_value_type`: change type of value to a new one (`include_keys=['foo', 'foo->b'], to_type='string'`, `{ foo: { a: 1, b: 2 } }` -> `{ foo: { a: "1", b: "2" } }`)
 
 ### Configuration
-The `Configuration` class is responsible of parsing a JSON string containing the desidered spec for the application. Multiple configuration can be provided and the application will check for a JSON file describing those configurations; this file should be structured as follow:
+The `Configuration` class is responsible of parsing a JSON string containing the desidered spec for the application. Multiple configuration can be provided and the application will check for a JSON file describing those configurations.
+It is also possible to specify a `log_level` for each step (source, operation, destination) that will log useful information to stdout. Available levels are `none=nothing will be logged`, `low=log step class only`, `high=log step class and handled message`. Default value is `low`.
+The file should be structured as follow:
 ```
 [
   {
     "source": {
-      "type": "console"
+      "type": "console",
+      "log_level": "high"
     },
     "operations": [
       {
@@ -47,7 +50,8 @@ The `Configuration` class is responsible of parsing a JSON string containing the
       }
     ],
     "destination": {
-      "type": "console"
+      "type": "console",
+      "log_level": "med"
     }
   },
   ...

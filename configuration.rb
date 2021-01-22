@@ -1,6 +1,8 @@
 require 'ostruct'
 
 class Configuration
+  attr_reader :config
+
   def initialize(source:)
     @config = source
 

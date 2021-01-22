@@ -1,7 +1,10 @@
 require 'kafka'
 
-class Destinations::Kafka
-  def initialize(url:, topic:)
+require_relative 'base'
+
+class Destinations::Kafka < Destinations::Base
+  def initialize(log_level: 'low', url:, topic:)
+    super(log_level: log_level)
     @topic = topic
     @kafka = Kafka.new(url)
     @producer = @kafka.async_producer(

@@ -1,9 +1,9 @@
 require 'oj'
 require 'readline'
 
-class Sources::Console
-  def initialize; end
+require_relative 'base'
 
+class Sources::Console < Sources::Base
   def each_message
     while read_string = Readline.readline("> ", true)
       next unless read_string.length > 0
