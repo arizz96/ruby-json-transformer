@@ -30,7 +30,7 @@ class Operations::ChangeValueType < Operations::Base
         v = _json_change_value_type(v, key_path: key_path)
       end
 
-      new_value = if _should_operate_key?(key_path) && !v.is_a?(Enumerable)
+      new_value = if _should_operate_key?(key_path)
         _convert_value(v)
       else
         v

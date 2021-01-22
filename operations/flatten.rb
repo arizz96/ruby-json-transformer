@@ -8,7 +8,11 @@ class Operations::Flatten < Operations::Base
   private
 
   def _flat_json(json, key_path: nil, parent_prefix: nil, separator: '.')
-    res = {}
+    res = if json.is_a?(Array)
+      []
+    else
+      {}
+    end
     object_key_path = key_path
 
     json.each_with_index do |elem, i|
@@ -30,11 +34,13 @@ class Operations::Flatten < Operations::Base
       end
 
       if _should_operate_key?(key_path)
-        if has_enumerable_value
+        if has_enumerable_value && !json.is_a?(Array)
           res.merge!(v)
         else
           res[key] = v
         end
+      elsif json.is_a?(Array)
+        res << v
       else
         res[key] = v
       end
